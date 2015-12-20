@@ -1,0 +1,16 @@
+extends layout
+block content
+
+	form(name="modesetting", method="post", action="/api/settings/mode")
+		div.actions
+			span.label Mode
+			input(type="submit", value="Automatic")
+			input(type="submit", value="On")
+			input(type="submit", value="Off")
+
+	form(name="tempsetting", method="post", action="/api/settings/temp")
+		div.input
+			span.label Temperature
+			input(type="text", name="temp")
+		div.actions
+			input(type="submit", value="Set")
