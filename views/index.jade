@@ -4,29 +4,47 @@ html(lang="en")
 		title= Home
 		script(src="/javascripts/angular.min.js")
 	body
-		form(name="modesetting", method="post", action="/api/settings/mode")
-			div.actions
-				span.label Mode
-				input(type="submit", value="Automatic")
-				input(type="submit", value="On")
-				input(type="submit", value="Off")
-
 		div(ng-app="myapp")
-			form(name="tempsetting", ng-controller="ExampleController", ng-submit="submit()")
+			form(name="modesetting", ng-controller="ModeController")
+				div.actions
+					span.label Mode
+					input(type="submit", value="Automatic", ng-click="submit1('auto')")
+					input(type="submit", value="On", ng-click="submit1('on')")
+					input(type="submit", value="Off", ng-click="submit1('off')")
+			| {{modefeedback}}
+
+			form(name="tempsetting", ng-controller="TempController", ng-submit="submit2()")
 				div.input
 					span.label Temperature
 					input(type="text", name="temp", id="temp", ng-model="tempData.temp", required)
 				div.actions
 					input(type="submit", value="Set")
-			{{feedback}}
+			| {{tempfeedback}}
 
 
 		script.
 			var app = angular.module('myapp', []);
+			app.controller('ModeController', function($scope, $http) {
+				$scope.modesetting = {};
+				$scope.submit1 = function(val, item, event) {
+					var dataObject = {
+						'mode'	: val
+					};
+					var responsePromise = $http.post("/api/settings/mode", dataObject, {});
+					responsePromise.success(function(dataFromServer, status, headers, config) {
+						if (!dataFromServer['success']) {
+							$scope.modefeedback = dataFromServer['message'];
+						}
+					});
+					responsePromise.error(function(data, status, headers, config) {
+						alert("Submitting form failed! Check your network connection?");
+					});
+				}
+			});
 
-			app.controller('ExampleController', function($scope, $http) {
+			app.controller('TempController', function($scope, $http) {
 				$scope.tempsetting = {};
-				$scope.submit = function(item, event) {
+				$scope.submit2 = function(item, event) {
 					console.log($scope.tempsetting.temp.$modelValue);
 					var dataObject = {
 						'temp'	: $scope.tempsetting.temp.$modelValue
@@ -35,7 +53,7 @@ html(lang="en")
 					responsePromise.success(function(dataFromServer, status, headers, config) {
 						//console.log(dataFromServer);
 						if (!dataFromServer['success']) {
-							$scope.feedback = dataFromServer['message'];
+							$scope.tempfeedback = dataFromServer['message'];
 						}
 					});
 					responsePromise.error(function(data, status, headers, config) {
