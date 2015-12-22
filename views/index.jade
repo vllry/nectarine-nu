@@ -1,16 +1,45 @@
-extends layout
-block content
+doctype html
+html(lang="en")
+	head
+		title= Home
+		script(src="/javascripts/angular.min.js")
+	body
+		form(name="modesetting", method="post", action="/api/settings/mode")
+			div.actions
+				span.label Mode
+				input(type="submit", value="Automatic")
+				input(type="submit", value="On")
+				input(type="submit", value="Off")
 
-	form(name="modesetting", method="post", action="/api/settings/mode")
-		div.actions
-			span.label Mode
-			input(type="submit", value="Automatic")
-			input(type="submit", value="On")
-			input(type="submit", value="Off")
+		div(ng-app="myapp")
+			form(name="tempsetting", ng-controller="ExampleController", ng-submit="submit()")
+				div.input
+					span.label Temperature
+					input(type="text", name="temp", id="temp", ng-model="tempData.temp", required)
+				div.actions
+					input(type="submit", value="Set")
+			{{feedback}}
 
-	form(name="tempsetting", method="post", action="/api/settings/temp")
-		div.input
-			span.label Temperature
-			input(type="text", name="temp")
-		div.actions
-			input(type="submit", value="Set")
+
+		script.
+			var app = angular.module('myapp', []);
+
+			app.controller('ExampleController', function($scope, $http) {
+				$scope.tempsetting = {};
+				$scope.submit = function(item, event) {
+					console.log($scope.tempsetting.temp.$modelValue);
+					var dataObject = {
+						'temp'	: $scope.tempsetting.temp.$modelValue
+					};
+					var responsePromise = $http.post("/api/settings/temp", dataObject, {});
+					responsePromise.success(function(dataFromServer, status, headers, config) {
+						//console.log(dataFromServer);
+						if (!dataFromServer['success']) {
+							$scope.feedback = dataFromServer['message'];
+						}
+					});
+					responsePromise.error(function(data, status, headers, config) {
+						alert("Submitting form failed! Check your network connection?");
+					});
+				}
+			});
