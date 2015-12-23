@@ -5,25 +5,46 @@ html(lang="en")
 		script(src="/javascripts/angular.min.js")
 	body
 		div(ng-app="myapp")
-			form(name="modesetting", ng-controller="ModeController")
-				div.actions
-					span.label Mode
-					input(type="submit", value="Automatic", ng-click="submit1('2')")
-					input(type="submit", value="On", ng-click="submit1('1')")
-					input(type="submit", value="Off", ng-click="submit1('0')")
-				| {{modefeedback}}
+			div(data-ng-controller="AngularJSCtrl")
+				form(name="modesetting", ng-controller="ModeController")
+					div.actions
+						span.label Mode
+						input(type="submit", value="Automatic", ng-click="submit1('2')")
+						input(type="submit", value="On", ng-click="submit1('1')")
+						input(type="submit", value="Off", ng-click="submit1('0')")
+					| {{modefeedback}}
 
-			form(name="tempsetting", ng-controller="TempController", ng-submit="submit2()")
-				div.input
-					span.label Temperature
-					input(type="text", name="temp", id="temp", ng-model="tempData.temp", required)
-				div.actions
-					input(type="submit", value="Set")
-				| {{tempfeedback}}
+				form(name="tempsetting", ng-controller="TempController", ng-submit="submit2()")
+					div.input
+						span.label Temperature
+						input(type="text", name="temp", id="temp", ng-model="data.result.temp", required)
+					div.actions
+						input(type="submit", value="Set")
+					| {{tempfeedback}}
 
 
 		script.
 			var app = angular.module('myapp', []);
+
+			app.service('dataService', function($http) {
+				this.getData = function() {
+					// $http() returns a $promise that we can add handlers with .then()
+					return $http({
+						method: 'GET',
+						url: 'http://localhost:3000/api/settings/temp'
+					});
+				}
+			});
+
+			app.controller('AngularJSCtrl', function($scope, dataService) {
+				console.log("1");
+				$scope.data = null;
+				console.log("2");
+				dataService.getData().then(function(dataResponse) {
+					$scope.data = dataResponse.data;
+				});
+			});
+
 			app.controller('ModeController', function($scope, $http) {
 				$scope.modesetting = {};
 				$scope.submit1 = function(val, item, event) {

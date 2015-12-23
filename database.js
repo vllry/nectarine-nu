@@ -42,6 +42,12 @@ var query = function(query, paramDict, funcOK, funcErr) {
 
 
 
+exports.settingGet = function(setting, funcOk, funcErr) {
+	query("SELECT " + setting + " FROM settings", {}, function(result) {
+		funcOk(result[0]);
+	}, funcErr);
+};
+
 exports.settingUpdate = function(setting, value, funcOk, funcErr) {
 	query("UPDATE settings SET " + setting + " = :value", {"value":value}, funcOk, funcErr);
 };
