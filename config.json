@@ -1,3 +1,11 @@
 {
-	"temp-sensor": "28-031590a563ff"
+	"temp-sensor": "28-031590a563ff",
+	"mysql" : {
+		"host" : "localhost",
+		"user" : "nectarine",
+		"password" : "beepboop",
+		"database" : "nectarine",
+		"connectionLimit" : 3,
+		"debug" : false
+	}
 }

@@ -8,10 +8,10 @@ html(lang="en")
 			form(name="modesetting", ng-controller="ModeController")
 				div.actions
 					span.label Mode
-					input(type="submit", value="Automatic", ng-click="submit1('auto')")
-					input(type="submit", value="On", ng-click="submit1('on')")
-					input(type="submit", value="Off", ng-click="submit1('off')")
-			| {{modefeedback}}
+					input(type="submit", value="Automatic", ng-click="submit1('2')")
+					input(type="submit", value="On", ng-click="submit1('1')")
+					input(type="submit", value="Off", ng-click="submit1('0')")
+				| {{modefeedback}}
 
 			form(name="tempsetting", ng-controller="TempController", ng-submit="submit2()")
 				div.input
@@ -19,7 +19,7 @@ html(lang="en")
 					input(type="text", name="temp", id="temp", ng-model="tempData.temp", required)
 				div.actions
 					input(type="submit", value="Set")
-			| {{tempfeedback}}
+				| {{tempfeedback}}
 
 
 		script.
@@ -45,14 +45,13 @@ html(lang="en")
 			app.controller('TempController', function($scope, $http) {
 				$scope.tempsetting = {};
 				$scope.submit2 = function(item, event) {
-					console.log($scope.tempsetting.temp.$modelValue);
 					var dataObject = {
 						'temp'	: $scope.tempsetting.temp.$modelValue
 					};
 					var responsePromise = $http.post("/api/settings/temp", dataObject, {});
 					responsePromise.success(function(dataFromServer, status, headers, config) {
-						//console.log(dataFromServer);
 						if (!dataFromServer['success']) {
+							console.log(dataFromServer['err']);
 							$scope.tempfeedback = dataFromServer['message'];
 						}
 					});
