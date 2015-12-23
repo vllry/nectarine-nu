@@ -1,18 +1,19 @@
 {
-	"name": "nectarine-nu",
-	"version": "0.0.1",
-	"private": false,
-	"scripts": {
-		"start": "python3 ./bin/yoyo-run.py && nodejs ./bin/www"
-	},
-	"dependencies": {
-		"express": "4",
-		"static-favicon": "latest",
-		"morgan": "1",
-		"cookie-parser": "1",
-		"body-parser": "1",
-		"debug": "2",
-		"jade": "1",
-		"mysql": "latest"
+  "name": "nectarine-nu",
+  "version": "0.0.1",
+  "private": false,
+  "scripts": {
+    "start": "python3 ./bin/yoyo-run.py && nodejs ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "1",
+    "cookie-parser": "1",
+    "debug": "2",
+    "express": "4",
+    "jade": "1",
+    "morgan": "1",
+    "mysql": "latest",
+    "pi-gpio": "0.0.8",
+    "static-favicon": "latest"
   }
 }

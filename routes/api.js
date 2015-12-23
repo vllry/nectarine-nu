@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var database = require('../database');
+var temperature = require('../modules/temperature');
 
 
 
@@ -26,6 +27,7 @@ router.route('/settings/mode')
 		});
 	})
 
+
 router.route('/settings/temp')
 	.get(function(req, res) {
 		database.settingGet('temp', function(result) {
@@ -39,6 +41,16 @@ router.route('/settings/temp')
 			res.json({'success':true, 'message':'Setting saved', 'result':result});
 		}, function(err) {
 			res.json({'success':false, 'message':'Setting not saved', 'err':err});
+		});
+	})
+
+
+router.route('/status/temp')
+	.get(function(req, res) {
+		temperature.getTemperature(function(result) {
+			res.json({'success':true, 'value':result});
+		}, function(err) {
+			res.json({'success':false, 'err':err});
 		});
 	})
 

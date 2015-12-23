@@ -1,5 +1,8 @@
 {
-	"temp-sensor": "28-031590a563ff",
+	"temp_sensor": "28-031590a563ff",
+	"pins": {
+		"powertail" : 17
+	},
 	"mysql" : {
 		"host" : "localhost",
 		"user" : "nectarine",

@@ -1,0 +1,1 @@
+rsync -avz --delete . vallery@rpi1:/home/vallery/node
