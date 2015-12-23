@@ -9,6 +9,8 @@ var routes = require('./routes/index');
 var api = require('./routes/api');
 var users = require('./routes/users');
 
+var brain = require('./modules/brain');
+
 var app = express();
 
 // view engine setup
@@ -57,5 +59,7 @@ app.use(function(err, req, res, next) {
     });
 });
 
+
+brain.run();
 
 module.exports = app;
