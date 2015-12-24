@@ -1,8 +1,9 @@
 {
-	"temp_sensor": "28-031590a563ff",
+	"tempSensor": "28-031590a563ff",
 	"pins": {
 		"powertail" : 11
 	},
+	"phoneIP": "10.0.0.50",
 	"mysql" : {
 		"host" : "localhost",
 		"user" : "nectarine",

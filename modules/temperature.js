@@ -5,7 +5,7 @@ var config = require('../config')
 
 
 exports.getTemperature = function(funcOk, funcErr) {
-	fs.readFile('/sys/bus/w1/devices/'+config.temp_sensor+'/w1_slave', 'utf8', function(err, contents) {
+	fs.readFile('/sys/bus/w1/devices/'+config.tempSensor+'/w1_slave', 'utf8', function(err, contents) {
 		if (err) {
 			console.log(err);
 			funcErr(err);
