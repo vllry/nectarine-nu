@@ -48,7 +48,7 @@ router.route('/settings/temp')
 router.route('/status/temp')
 	.get(function(req, res) {
 		temperature.getTemperature(function(result) {
-			res.json({'success':true, 'value':result});
+			res.json({'success':true, 'value':result.toString()});
 		}, function(err) {
 			res.json({'success':false, 'err':err});
 		});

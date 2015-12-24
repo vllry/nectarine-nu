@@ -44,7 +44,7 @@ var query = function(query, paramDict, funcOK, funcErr) {
 
 exports.settingGet = function(setting, funcOk, funcErr) {
 	query("SELECT " + setting + " FROM settings", {}, function(result) {
-		funcOk(result[0]);
+		funcOk(Number(result[0][setting]));
 	}, funcErr);
 };
 
