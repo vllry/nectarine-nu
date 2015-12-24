@@ -1,5 +1,6 @@
 var database = require('../database');
 var temperature = require('./temperature');
+var powertail = require('./powertail');
 
 
 
@@ -8,12 +9,11 @@ exports.run = function() {
 		temperature.getTemperature(function (current) {
 			database.settingGet('temp', function(desired) {
 				var desired = Number(desired.temp);
-				console.log(desired);
 				if (current - desired > 1) {
-					console.log('off');
+					powertail.set(false);
 				}
 				else if (current - desired < -1) {
-					console.log('on')
+					powertail.set(true);
 				}
 				else {
 					console.log(current - desired);
@@ -24,5 +24,5 @@ exports.run = function() {
 		}, function (err) {
 			console.log(err);
 		});
-	}, 10 * 1000);	//Every 10s
+	}, 20 * 1000);	//Every 20s
 };

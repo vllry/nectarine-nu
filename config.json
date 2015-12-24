@@ -1,7 +1,7 @@
 {
 	"temp_sensor": "28-031590a563ff",
 	"pins": {
-		"powertail" : 17
+		"powertail" : 11
 	},
 	"mysql" : {
 		"host" : "localhost",
