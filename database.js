@@ -48,8 +48,16 @@ exports.settingGet = function(setting, funcOk, funcErr) {
 	}, funcErr);
 };
 
+
+
 exports.settingUpdate = function(setting, value, funcOk, funcErr) {
 	query("UPDATE settings SET " + setting + " = :value", {"value":value}, funcOk, funcErr);
+};
+
+
+
+exports.addCoordinates = function(lat, lon, funcOk, funcErr) {
+	query("INSERT INTO coordinates(lat, lon) VALUES(:lat, :lon)", {"lat":lat, "lon":lon}, funcOk, funcErr);
 };
 
 
