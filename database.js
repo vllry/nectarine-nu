@@ -6,6 +6,15 @@ var pool	= mysql.createPool(config.mysql);
 
 
 
+/*
+Before you say MySQL is overkill, let me explain you a thing
+
+	* I didn't want to just use files because of the GPS data stuff
+	* MongoDB (the usual choice in this situation) has a lot of "fun" quirks, and they're dropping non-64-bit support
+	* "The" SQLite module doesn't work (lol)
+	* I already had code to copy-penne from another project
+*/
+
 var query = function(query, paramDict, funcOK, funcErr) {
 	pool.getConnection(function(err,connection){
 		if (err) {
@@ -16,7 +25,7 @@ var query = function(query, paramDict, funcOK, funcErr) {
 			connection.release();
 			return;
 		}  
-		console.log('connected as id ' + connection.threadId);
+		//console.log('connected as id ' + connection.threadId);
 		
 		connection.config.queryFormat = function (query, values) {
 			if (!values) return query;
@@ -57,7 +66,21 @@ exports.settingUpdate = function(setting, value, funcOk, funcErr) {
 
 
 exports.addCoordinates = function(lat, lon, funcOk, funcErr) {
-	query("INSERT INTO coordinates(lat, lon) VALUES(:lat, :lon)", {"lat":lat, "lon":lon}, funcOk, funcErr);
+	var distance = Math.sqrt( Math.abs(Math.pow(config.coordinates.home.lat-lat, 2) + Math.pow(config.coordinates.home.lon-lon, 2)) );
+	console.log(distance);
+	query("INSERT INTO coordinates(lat, lon, distance) VALUES(:lat, :lon, :dist)", {"lat":lat, "lon":lon, "dist":distance}, funcOk, funcErr);
+};
+
+
+
+exports.getCoordinates = function(withinTime, num, funcOk, funcErr) {
+	query("SELECT * FROM coordinates WHERE time > UNIX_TIMESTAMP() - :withinTime ORDER BY time DESC LIMIT :lim", {"withinTime":withinTime, "lim":num}, funcOk, funcErr);
+};
+
+
+
+exports.getPreviousRing = function(ringInner, ringOuter, funcOk, funcErr) {
+	query("SELECT time,distance FROM coordinates WHERE distance < :ringInner OR distance >= :ringOuter ORDER BY time DESC LIMIT 1", {"ringInner":ringInner, "ringOuter":ringOuter}, funcOk, funcErr);
 };
 
 

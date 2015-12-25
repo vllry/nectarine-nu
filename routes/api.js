@@ -57,7 +57,7 @@ router.route('/status/temp')
 
 router.route('/gps')
 	.get(function(req, res) {
-		database.addCoordinates(req.query.lat, req.query.lon, function(result) {
+		database.addCoordinates(Number(req.query.lat), Number(req.query.lon), function(result) {
 			res.json({'success':true});
 		}, function(err) {
 			res.json({'success':false, 'err':err});
