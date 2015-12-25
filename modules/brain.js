@@ -44,20 +44,17 @@ exports.run = function() {
 			if (mode == 2) { //Automatic mode
 				exec("ping -c 1 " + config.phoneIP, function(err, stdout, stderr) { //Check if phone is on the LAN
 					if (err) { //Ping failed, attempt to determine if you're coming home
-						database.getCoordinates(120, 1, function(coordinates) {
+						database.getCoordinates(300, 1, function(coordinates) {
 							if (!coordinates.length) {
 								determineState(0);
 								return;
 							}
 							var place = coordinates[0];
 
-							console.log("uh?");
 							for (var i = 1; i < radii.length; i++) {
-								if (place.distance <= config.coordinates.radius[i]) {
+								if (place.distance <= radii[i]) {
 									database.getPreviousRing(radii[i-1], radii[i], function(result) {
-										console.log('prevring:');
-										console.log(result.distance);
-										if (result.distance >= radii[i]) {
+										if (result[0].distance >= radii[i]) {
 											console.log("Headed inland cap'n");
 											determineState(1);
 											return;
