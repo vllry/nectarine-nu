@@ -13,7 +13,7 @@ radii.unshift(0); //Prepend a 0
 
 
 
-var determineState = function(mode) { //mode==1 -> on, mode==2 -> off
+var determineState = function(mode) { //mode==1 -> on, mode==0 -> off
 	if (mode == 1 ) {
 		temperature.getTemperature(function (current) {
 			database.settingGet('temp', function(desired) {
@@ -37,6 +37,45 @@ var determineState = function(mode) { //mode==1 -> on, mode==2 -> off
 
 
 
+var determineIfComingHome = function() {
+	database.getCoordinates(999999, 1, function(coordinates) {
+		if (!coordinates.length) {
+			determineState(0);
+			return;
+		}
+		var place = coordinates[0];
+
+		for (var i = 1; i < radii.length; i++) {
+			if (place.distance <= radii[i]) {
+				database.getPreviousRing(radii[i-1], radii[i], function(result) {
+					if (result[0].distance >= radii[i]) {
+						console.log("Headed inland cap'n");
+						//Now to determine how long you've been in the current radius ring
+						var beenInRingFor = place.time - result[0].time;
+						console.log("Been in ring for " + beenInRingFor);
+						if (beenInRingFor <= 120) {
+							determineState(1);
+							return;
+						}
+					}
+					determineState(0);
+				}, function (err) {
+					console.log('no :/');
+					console.log(err);
+				});
+				break;
+			}
+		}
+
+	}, function(err) {
+		console.log("oshi");
+		console.log(err);
+		determineState(0);
+	});
+};
+
+
+
 exports.run = function() {
 	setInterval(function() {
 		database.settingGet('mode', function(mode) {
@@ -44,35 +83,7 @@ exports.run = function() {
 			if (mode == 2) { //Automatic mode
 				exec("ping -c 1 " + config.phoneIP, function(err, stdout, stderr) { //Check if phone is on the LAN
 					if (err) { //Ping failed, attempt to determine if you're coming home
-						database.getCoordinates(300, 1, function(coordinates) {
-							if (!coordinates.length) {
-								determineState(0);
-								return;
-							}
-							var place = coordinates[0];
-
-							for (var i = 1; i < radii.length; i++) {
-								if (place.distance <= radii[i]) {
-									database.getPreviousRing(radii[i-1], radii[i], function(result) {
-										if (result[0].distance >= radii[i]) {
-											console.log("Headed inland cap'n");
-											determineState(1);
-											return;
-										}
-										determineState(0);
-									}, function (err) {
-										console.log('no :/');
-										console.log(err);
-									});
-									break;
-								}
-							}
-
-						}, function(err) {
-							console.log("oshi");
-							console.log(err);
-							determineState(0);
-						});
+						determineIfComingHome();
 					}
 					else { //Ping success, you're at home
 						determineState(1);
@@ -86,5 +97,5 @@ exports.run = function() {
 		}, function (err) {
 			console.log(err);
 		});
-	}, 20 * 1000);	//Every 20s
+	}, 10 * 1000);	//Every 10s
 };
