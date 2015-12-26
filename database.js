@@ -85,12 +85,4 @@ exports.getPreviousRing = function(ringInner, ringOuter, funcOk, funcErr) {
 
 
 
-/*exports.getTimeInRing = function(ringInner, ringOuter, funcOk, funcErr) {
-	query("\
-SELECT time FROM coordinates WHERE distance >= :ringInner AND distance < :ringOuter ORDER BY time DESC LIMIT 1\
-", {"ringInner":ringInner, "ringOuter":ringOuter}, funcOk, funcErr);
-};*/
-
-
-
 exports.query = query;

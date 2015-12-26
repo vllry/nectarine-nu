@@ -51,7 +51,7 @@ var determineIfComingHome = function() {
 					if (result[0].distance >= radii[i]) {
 						console.log("Headed inland cap'n");
 						//Now to determine how long you've been in the current radius ring
-						var beenInRingFor = place.time - result[0].time;
+						var beenInRingFor = Math.floor(new Date() / 1000) - result[0].time;
 						console.log("Been in ring for " + beenInRingFor);
 						if (beenInRingFor <= 120) {
 							determineState(1);
