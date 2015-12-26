@@ -3,7 +3,7 @@
 	"pins": {
 		"powertail" : 11
 	},
-	"phoneIP": "10.0.0.88",
+	"phoneIP": "192.168.0.168",
 	"mysql" : {
 		"host" : "localhost",
 		"user" : "nectarine",
@@ -14,16 +14,15 @@
 	},
 	"coordinates": {
 		"home" : {
-			"lat": 48.4697,
-			"lon": -123.391
+			"lat": 48.4526559,
+			"lon": -123.3888758
 		},
 		"radius" : [
 			0.003,
 			0.01,
-			0.02,
-			0.04,
-			0.06
+			0.025,
+			0.05
 		],
-		"distCost" : 5
+		"distCost" : 7
 	}
 }

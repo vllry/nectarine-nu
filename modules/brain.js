@@ -53,7 +53,11 @@ var determineIfComingHome = function() {
 						//Now to determine how long you've been in the current radius ring
 						var beenInRingFor = Math.floor(new Date() / 1000) - result[0].time;
 						console.log("Been in ring for " + beenInRingFor);
-						if (beenInRingFor <= 120) {
+						var maxRingTime = (radii[i]-radii[i-1])*100*config.coordinates.distCost * 60;
+						console.log("maxRingTime " + maxRingTime);
+						if (beenInRingFor <= maxRingTime) { //Planned feature: add falloff based on inner radius of ring
+							//Since the goal of outer rings is to catch fast movement like a bus or car ride.
+							//If you happen to walk the whole way or something, no need to have the heat on the whole tile.
 							determineState(1);
 							return;
 						}

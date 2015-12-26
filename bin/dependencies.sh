@@ -9,3 +9,5 @@ sudo make install
 sudo adduser $USER gpio
 
 sudo apt-get install mysql-server
+
+echo "I recommend installing https://play.google.com/store/apps/details?id=fr.herverenault.selfhostedgpstracker and pointing it to /gps. Interval should be less than 5 minutes."
