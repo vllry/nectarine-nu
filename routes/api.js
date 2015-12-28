@@ -3,6 +3,7 @@ var router = express.Router();
 
 var database = require('../database');
 var temperature = require('../modules/temperature');
+var brain = require('../modules/brain');
 
 
 
@@ -21,6 +22,7 @@ router.route('/settings/mode')
 	})
 	.post(function(req, res) {
 		database.settingUpdate('mode', req.body.mode, function(result) {
+			brain.determineCurrentState();
 			res.json({'success':true, 'message':'Setting saved', 'result':result});
 		}, function(err) {
 			res.json({'success':false, 'message':'Setting not saved', 'err':err});
@@ -38,6 +40,7 @@ router.route('/settings/temp')
 	})
 	.post(function(req, res) {
 		database.settingUpdate('temp', req.body.temp, function(result) {
+			brain.determineCurrentState();
 			res.json({'success':true, 'message':'Setting saved', 'result':result});
 		}, function(err) {
 			res.json({'success':false, 'message':'Setting not saved', 'err':err});

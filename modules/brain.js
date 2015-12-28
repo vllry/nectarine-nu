@@ -86,9 +86,7 @@ var determineIfComingHome = function() {
 };
 
 
-
-exports.run = function() {
-	setInterval(function() {
+exports.determineCurrentState = function() {
 		database.settingGet('mode', function(mode) {
 
 			if (mode == 2) { //Automatic mode
@@ -108,5 +106,9 @@ exports.run = function() {
 		}, function (err) {
 			console.log(err);
 		});
-	}, 10 * 1000);	//Every 10s
+	};
+
+exports.run = function() {
+	setInterval(exports.determineCurrentState, 10 * 1000);
+	exports.determineCurrentState();
 };
