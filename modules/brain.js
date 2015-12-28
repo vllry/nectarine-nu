@@ -47,7 +47,7 @@ var determineState = function(mode) { //mode==1 -> on, mode==0 -> off
 
 
 var determineIfComingHome = function() {
-	database.getCoordinates(999999, 2, function(coordinates) {
+	database.getCoordinates(900, 2, function(coordinates) { //If there's been no gps data for more than 15 minutes, it's probably not relavent anyway.
 		if (coordinates.length <= 1) {
 			console.info("Insufficient samples, assuming off");
 			determineState(0);
@@ -60,7 +60,7 @@ var determineIfComingHome = function() {
 			return;
 		}
 
-		for (var i = 1; i < radii.length; i++) {
+		for (var i = 2; i < radii.length; i++) {
 			if (place.distance <= radii[i]) {
 				console.info("We're inside radii "+i+", distance: " + place.distance);
 				database.getPreviousRing(radii[i-1], radii[i], function(result) {
@@ -73,7 +73,7 @@ var determineIfComingHome = function() {
 						console.info("maxRingTime " + maxRingTime);
 						if (beenInRingFor <= maxRingTime) { //Planned feature: add falloff based on inner radius of ring
 							//Since the goal of outer rings is to catch fast movement like a bus or car ride.
-							//If you happen to walk the whole way or something, no need to have the heat on the whole tile.
+							//If you happen to walk the whole way or something, no need to have the heat on the whole time.
 							determineState(1);
 							return;
 						}
