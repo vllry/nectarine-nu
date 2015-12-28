@@ -2,24 +2,28 @@ doctype html
 html(lang="en")
 	head
 		title= Home
+		meta(name="viewport", content="width=device-width, initial-scale=1")
+		link(href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css", rel="stylesheet", crossorigin="anonymous")
+		link(rel="stylesheet", type="text/css", href="/stylesheets/style.css?t=2")
 		script(src="/javascripts/angular.min.js")
 	body
 		div(ng-app="myapp")
 			div(data-ng-controller="AngularJSCtrl")
 				form(name="modesetting", ng-controller="ModeController")
-					div.actions
-						span.label Mode
-						input(type="submit", value="Automatic", ng-click="submit1('2')")
-						input(type="submit", value="On", ng-click="submit1('1')")
-						input(type="submit", value="Off", ng-click="submit1('0')")
+					label Mode
+					div.actions.btn-group
+						input.btn.btn-default(type="submit", value="Force On", ng-click="submit1('3')")
+						input.btn.btn-default(type="submit", value="On", ng-click="submit1('1')")
+						input.btn.btn-default(type="submit", value="Proximity", ng-click="submit1('2')")
+						input.btn.btn-default(type="submit", value="Off", ng-click="submit1('0')")
 					| {{modefeedback}}
 
 				form(name="tempsetting", ng-controller="TempController", ng-submit="submit2()")
-					div.input
-						span.label Temperature
-						input(type="text", name="temp", id="temp", ng-model="data.result", required)
-					div.actions
-						input(type="submit", value="Set")
+					label Temperature
+					div.input.input-group.number-group
+						input.form-control(type="number", step="any", name="temp", id="temp", ng-model="data.result", required, autocomplete="off")
+						span.input-group-btn
+							input.btn.btn-default(type="submit", value="Set")
 					| {{tempfeedback}}
 					| Currently {{tempCurrent.value}} degrees.
 

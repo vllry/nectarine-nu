@@ -12,15 +12,21 @@ var radii = config.coordinates.radius;
 radii.unshift(0); //Prepend a 0
 
 
-
+/*
+0 - off
+1 - on
+3 - FORCE on
+ */
 var determineState = function(mode) { //mode==1 -> on, mode==0 -> off
 	if (mode == 1 ) {
 		temperature.getTemperature(function (current) {
 			database.settingGet('temp', function(desired) {
 				if (current - desired > 1) {
+					console.info("Current temperature ("+current+") near target ("+desired+"), disabling");
 					powertail.set(false);
 				}
 				else if (desired - current > 1) {
+					console.info("Current temperature ("+current+") below target ("+desired+"), enabling");
 					powertail.set(true);
 				}
 			}, function (err) {
@@ -29,10 +35,13 @@ var determineState = function(mode) { //mode==1 -> on, mode==0 -> off
 		}, function (err) {
 			console.log(err);
 		});
-		return;
+	} else if (mode == 3) {
+		console.info("Forced On");
+		powertail.set(true);
+	} else {
+		console.info('Disabling');
+		powertail.set(false)
 	}
-	console.log('off mode');
-	powertail.set(false)
 };
 
 
