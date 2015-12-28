@@ -11,7 +11,7 @@ exports.getTemperature = function(funcOk, funcErr) {
 			funcErr(err);
 		}
 		else {
-			temp = Number(contents.split('t=')[1].replace('\n', ''))/1000;
+			var temp = Number(contents.split('t=')[1].replace('\n', ''))/1000;
 			funcOk(temp);
 		}
 	});

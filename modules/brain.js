@@ -38,23 +38,30 @@ var determineState = function(mode) { //mode==1 -> on, mode==0 -> off
 
 
 var determineIfComingHome = function() {
-	database.getCoordinates(999999, 1, function(coordinates) {
-		if (!coordinates.length) {
+	database.getCoordinates(999999, 2, function(coordinates) {
+		if (coordinates.length <= 1) {
+			console.info("Insufficient samples, assuming off");
 			determineState(0);
 			return;
 		}
 		var place = coordinates[0];
+		if (place.distance <= radii[1]) {
+			console.info("We're really close, probably home (with wifi off)");
+			determineState(1);
+			return;
+		}
 
 		for (var i = 1; i < radii.length; i++) {
 			if (place.distance <= radii[i]) {
+				console.info("We're inside radii "+i+", distance: " + place.distance);
 				database.getPreviousRing(radii[i-1], radii[i], function(result) {
 					if (result[0].distance >= radii[i]) {
-						console.log("Headed inland cap'n");
+						console.info("Headed inland cap'n");
 						//Now to determine how long you've been in the current radius ring
 						var beenInRingFor = Math.floor(new Date() / 1000) - result[0].time;
-						console.log("Been in ring for " + beenInRingFor);
+						console.info("Been in ring for " + beenInRingFor);
 						var maxRingTime = (radii[i]-radii[i-1])*100*config.coordinates.distCost * 60;
-						console.log("maxRingTime " + maxRingTime);
+						console.info("maxRingTime " + maxRingTime);
 						if (beenInRingFor <= maxRingTime) { //Planned feature: add falloff based on inner radius of ring
 							//Since the goal of outer rings is to catch fast movement like a bus or car ride.
 							//If you happen to walk the whole way or something, no need to have the heat on the whole tile.
